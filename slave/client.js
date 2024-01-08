@@ -49,16 +49,16 @@ socket.on('disconnect', () => {
 function executeShutdownCommand() {
   console.log(`Executing shutdown actions for ${CLIENT_NAME}...`);
 
-  mockShutdownFunction() 
+  // mockShutdownFunction() 
 
   // RIIL MATI IKI
-  // exec('shutdown /s /t 0', (error, stdout, stderr) => {
-  //   if (error) {
-  //     console.error(`Error executing shutdown command: ${error.message}`);
-  //   } else {
-  //     console.log('System is shutting down...');
-  //   }
-  // });
+  exec('shutdown /s /t 0', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing shutdown command: ${error.message}`);
+    } else {
+      console.log('System is shutting down...');
+    }
+  });
 }
 
 function mockShutdownFunction() {
