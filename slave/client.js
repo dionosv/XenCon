@@ -21,6 +21,9 @@ const MASTER_NAME = process.env.MASTER_NAME;
 socket.on('connect', () => {
   console.log(`${CLIENT_NAME} connected:`, socket.id);
   socket.emit('clientMessage', `Hello ${MASTER_NAME}!`);
+
+  // Send the client name to the server
+  socket.emit('setClientName', CLIENT_NAME);
 });
 
 // Listen for the broadcasted client name from master
@@ -30,7 +33,7 @@ socket.on('clientConnected', ({ clientName }) => {
 
 socket.on('message', (message) => {
   console.log(`Message from ${MASTER_NAME}:`, message);
-});
+});z
 
 socket.on('shutdownCommand', ({ targetClient }) => {
   if (targetClient === CLIENT_NAME) {
