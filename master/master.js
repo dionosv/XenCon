@@ -20,12 +20,19 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log(`${CLIENT_NAME} connected:`, socket.id);
+  
+  // Receive client name from the connected client
+  socket.on('setClientName', (clientName) => {
+    // Set the client name dynamically
+    CLIENT_NAME = clientName;
+    console.log(`Client ${CLIENT_NAME} connected:`, socket.id);
 
-  socket.emit('message', `Welcome, ${CLIENT_NAME}!`);
+    // Send a welcome message to the connected client
+    socket.emit('message', `Welcome, ${CLIENT_NAME}!`);
 
-  // Broadcast the client name to other clients
-  io.emit('clientConnected', { clientName: CLIENT_NAME });
+    // Broadcast the client name to other clients
+    io.emit('clientConnected', { clientName: CLIENT_NAME });
+  });
 
   socket.on('clientMessage', (message) => {
     console.log(`Message from ${CLIENT_NAME}:`, message);
