@@ -23,6 +23,11 @@ socket.on('connect', () => {
   socket.emit('clientMessage', `Hello ${MASTER_NAME}!`);
 });
 
+// Listen for the broadcasted client name from master
+socket.on('clientConnected', ({ clientName }) => {
+  console.log(`Client connected: ${clientName}`);
+});
+
 socket.on('message', (message) => {
   console.log(`Message from ${MASTER_NAME}:`, message);
 });
@@ -49,16 +54,16 @@ socket.on('disconnect', () => {
 function executeShutdownCommand() {
   console.log(`Executing shutdown actions for ${CLIENT_NAME}...`);
 
-  // mockShutdownFunction() 
+  mockShutdownFunction() 
 
   // RIIL MATI IKI
-  exec('shutdown /s /t 0', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing shutdown command: ${error.message}`);
-    } else {
-      console.log('System is shutting down...');
-    }
-  });
+  // exec('shutdown /s /t 0', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing shutdown command: ${error.message}`);
+  //   } else {
+  //     console.log('System is shutting down...');
+  //   }
+  // });
 }
 
 function mockShutdownFunction() {

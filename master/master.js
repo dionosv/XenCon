@@ -24,6 +24,9 @@ io.on('connection', (socket) => {
 
   socket.emit('message', `Welcome, ${CLIENT_NAME}!`);
 
+  // Broadcast the client name to other clients
+  io.emit('clientConnected', { clientName: CLIENT_NAME });
+
   socket.on('clientMessage', (message) => {
     console.log(`Message from ${CLIENT_NAME}:`, message);
   });
