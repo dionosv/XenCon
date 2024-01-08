@@ -1,23 +1,39 @@
 const io = require('socket.io-client');
+const dotenv = require('dotenv');
+const path = require('path');
+const { exec } = require('child_process');
 
-// Replace the URL with the actual master server URL
+// configure .env
+const rootDir = path.resolve(__dirname, '..');
+dotenv.config({ path: path.join(rootDir, '.env') });
+
+// for development, please uncomment this code below
+// const masterServerURL = 'http://localhost:8888/';
+
+// otherwise ,uncomment this code below
 const masterServerURL = 'http://51.20.187.111:8888/';
+
 const socket = io.connect(masterServerURL);
 
-// Handle the connection event
+const CLIENT_NAME = process.env.CLIENT_NAME;
+const MASTER_NAME = process.env.MASTER_NAME;
+
 socket.on('connect', () => {
-  console.log('Client connected:', socket.id);
-
-  // Send a message to the master upon connection
-  socket.emit('clientMessage', 'Hello Master!');
-
-  // Handle messages from the master
-  socket.on('message', (message) => {
-    console.log('Message from Master:', message);
-  });
+  console.log(`${CLIENT_NAME} connected:`, socket.id);
+  socket.emit('clientMessage', `Hello ${MASTER_NAME}!`);
 });
 
-// Handle the connection error event
+socket.on('message', (message) => {
+  console.log(`Message from ${MASTER_NAME}:`, message);
+});
+
+socket.on('shutdownCommand', ({ targetClient }) => {
+  if (targetClient === CLIENT_NAME) {
+    console.log(`Received shutdown command from ${MASTER_NAME} for ${CLIENT_NAME}...`);
+    executeShutdownCommand();
+  }
+});
+
 socket.on('connect_error', (error) => {
   console.error('Connection error:', error.message);
 
@@ -26,7 +42,26 @@ socket.on('connect_error', (error) => {
   }
 });
 
-// Handle disconnection event
 socket.on('disconnect', () => {
-  console.log('Client disconnected');
+  console.log(`${CLIENT_NAME} disconnected`);
 });
+
+function executeShutdownCommand() {
+  console.log(`Executing shutdown actions for ${CLIENT_NAME}...`);
+
+  mockShutdownFunction() 
+
+  // RIIL MATI IKI
+  // exec('shutdown /s /t 0', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing shutdown command: ${error.message}`);
+  //   } else {
+  //     console.log('System is shutting down...');
+  //   }
+  // });
+}
+
+function mockShutdownFunction() {
+  console.log(`Mock shutdown function called for ${CLIENT_NAME}...`);
+  console.log(`Mock shutdown successful for ${CLIENT_NAME}...`);
+}
