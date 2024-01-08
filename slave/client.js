@@ -33,7 +33,7 @@ socket.on('clientConnected', ({ clientName }) => {
 
 socket.on('message', (message) => {
   console.log(`Message from ${MASTER_NAME}:`, message);
-});z
+});
 
 socket.on('shutdownCommand', ({ targetClient }) => {
   if (targetClient === CLIENT_NAME) {
