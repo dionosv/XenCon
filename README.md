@@ -46,6 +46,12 @@ cd XenCon/slave
 2. Connect client to master server:
 
 ```bash
+#windows
+$env:TOKEN="server-token" 
+node client.js
+
+#linux
+export TOKEN=server-token
 node client.js
 ```
 
