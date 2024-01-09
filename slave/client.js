@@ -11,12 +11,13 @@ dotenv.config({ path: path.join(rootDir, '.env') });
 // const masterServerURL = 'http://localhost:8888/';
 
 // Otherwise, uncomment this code below
-const masterServerURL = 'http://51.20.187.111:8888/';
 
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_NAME = process.env.CLIENT_NAME;
 const MASTER_NAME = process.env.MASTER_NAME;
+const masterServerURL = process.env.SERVER_DIRECTORY_PORT;
+
 
 // Connect to the master server
 const socket = io.connect(masterServerURL, {
