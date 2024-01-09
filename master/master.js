@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
   socket.emit('message', `Welcome, ${clientName}!`);
 
   // Give a shutdown command to the specific PC
-  socket.emit('shutdownCommand', { targetClient: XENHACKPC1 });
+  socket.emit('shutdownCommand', { targetClient: clientName });
 
   socket.on('clientMessage', (message) => {
     console.log(`Message from ${clientName}:`, message);
