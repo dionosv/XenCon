@@ -8,10 +8,10 @@ const rootDir = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(rootDir, '.env') });
 
 // For development, please uncomment this code below
-const masterServerURL = 'http://localhost:8888/';
+// const masterServerURL = 'http://localhost:8888/';
 
 // Otherwise, uncomment this code below
-// const masterServerURL = 'http://51.20.187.111:8888/';
+const masterServerURL = 'http://51.20.187.111:8888/';
 
 // Extract CLIENT_NAME from the client's .env
 const CLIENT_NAME = process.env.CLIENT_NAME;
