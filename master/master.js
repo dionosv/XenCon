@@ -14,7 +14,6 @@ dotenv.config({ path: path.join(rootDir, '.env') });
 const PORT = 8888;
 const MASTER_NAME = process.env.MASTER_NAME;
 
-// Create an array to store connected clients
 const connectedClients = [];
 
 app.get('/', (req, res) => {
@@ -51,10 +50,11 @@ io.on('connection', (socket) => {
       connectedClients.splice(index, 1);
     }
 
+    io.emit('message', `${clientName} disconnected`);
+
     // Broadcast the updated list of connected clients to all clients
     io.emit('clientConnected', { clients: connectedClients });
 
-    io.emit('message', `${clientName} disconnected`);
   });
 });
 
