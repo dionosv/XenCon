@@ -13,6 +13,7 @@ dotenv.config({ path: path.join(rootDir, '.env') });
 
 const PORT = 8888;
 const MASTER_NAME = process.env.MASTER_NAME;
+const TOKEN = process.env.TOKEN;
 
 const connectedClients = [];
 
@@ -21,8 +22,14 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  // Extract CLIENT_NAME from the client's .env
   const clientName = socket.handshake.headers['x-client-name'];
+  const clientToken = socket.handshake.headers['x-client-token'];
+
+  if (clientToken !== TOKEN) {
+    console.log(`Unauthorized connection attempt from ${clientName}. Disconnecting...`);
+    socket.disconnect(true); 
+    return;
+  }
 
   console.log(`${clientName} connected:`, socket.id);
 

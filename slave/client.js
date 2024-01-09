@@ -13,17 +13,18 @@ const masterServerURL = 'http://localhost:8888/';
 // Otherwise, uncomment this code below
 // const masterServerURL = 'http://51.20.187.111:8888/';
 
-// Extract CLIENT_NAME from the client's .env
+
+const TOKEN = process.env.TOKEN;
 const CLIENT_NAME = process.env.CLIENT_NAME;
 const MASTER_NAME = process.env.MASTER_NAME;
 
 // Connect to the master server
 const socket = io.connect(masterServerURL, {
-  // Pass CLIENT_NAME as a custom header
   transportOptions: {
     polling: {
       extraHeaders: {
         'x-client-name': CLIENT_NAME,
+        'x-client-token': TOKEN,
       },
     },
   },
