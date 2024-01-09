@@ -13,30 +13,48 @@ dotenv.config({ path: path.join(rootDir, '.env') });
 
 const PORT = 8888;
 const MASTER_NAME = process.env.MASTER_NAME;
-const CLIENT_NAME = process.env.CLIENT_NAME;
+
+// Create an array to store connected clients
+const connectedClients = [];
 
 app.get('/', (req, res) => {
   res.send(`${MASTER_NAME} is running!`);
 });
 
 io.on('connection', (socket) => {
-  console.log(`${CLIENT_NAME} connected:`, socket.id);
+  // Extract CLIENT_NAME from the client's .env
+  const clientName = socket.handshake.headers['x-client-name'];
 
-  socket.emit('message', `Welcome, ${CLIENT_NAME}!`);
+  console.log(`${clientName} connected:`, socket.id);
 
-   // Broadcast the client name to other clients
-   io.emit('clientConnected', { clientName: CLIENT_NAME });
-   
+  // Add the connected client to the array
+  connectedClients.push(clientName);
+
+  // Broadcast the list of connected clients to all clients
+  io.emit('clientConnected', { clients: connectedClients });
+
+  socket.emit('message', `Welcome, ${clientName}!`);
+
+  // Give a shutdown command to the specific PC
+  socket.emit('shutdownCommand', { targetClient: clientName });
+
   socket.on('clientMessage', (message) => {
-    console.log(`Message from ${CLIENT_NAME}:`, message);
+    console.log(`Message from ${clientName}:`, message);
   });
 
-  // give command shutdown to specific PC
-  socket.emit('shutdownCommand', { targetClient: 'XENHACKPC1' });
-
   socket.on('disconnect', () => {
-    console.log(`${CLIENT_NAME} disconnected:`, socket.id);
-    io.emit('message', `${CLIENT_NAME} disconnected`);
+    console.log(`${clientName} disconnected:`, socket.id);
+
+    // Remove the disconnected client from the array
+    const index = connectedClients.indexOf(clientName);
+    if (index !== -1) {
+      connectedClients.splice(index, 1);
+    }
+
+    // Broadcast the updated list of connected clients to all clients
+    io.emit('clientConnected', { clients: connectedClients });
+
+    io.emit('message', `${clientName} disconnected`);
   });
 });
 
