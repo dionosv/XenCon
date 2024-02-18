@@ -51,6 +51,20 @@ socket.on('shutdownCommand', ({ targetClient }) => {
   }
 });
 
+socket.on('sleepCommand', ({ targetClient }) => {
+  if (targetClient === CLIENT_NAME) {
+    console.log(`Received sleep command from ${MASTER_NAME} for ${CLIENT_NAME}...`);
+    executeSleepCommand();
+  }
+});
+
+socket.on('restartCommand', ({ targetClient }) => {
+  if (targetClient === CLIENT_NAME) {
+    console.log(`Received restart command from ${MASTER_NAME} for ${CLIENT_NAME}...`);
+    executeRestartCommand();
+  }
+});
+
 socket.on('connect_error', (error) => {
   console.error('Connection error:', error.message);
 
@@ -74,6 +88,59 @@ function executeShutdownCommand() {
   //     console.error(`Error executing shutdown command: ${error.message}`);
   //   } else {
   //     console.log('System is shutting down...');
+  //   }
+  // });
+
+  // Shutdown command for Linux
+  // exec('sudo shutdown -h now', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing shutdown command: ${error.message}`);
+  //   } else {
+  //     console.log('System is shutting down...');
+  //   }
+  // });
+}
+
+function executeSleepCommand() {
+  console.log(`Executing sleep actions for ${CLIENT_NAME}...`);
+
+  // Sleep command for Windows
+  // exec('shutdown /h', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing sleep command: ${error.message}`);
+  //   } else {
+  //     console.log('System is going to sleep...');
+  //   }
+  // });
+
+  // Sleep command for Linux
+  // exec('sudo pm-suspend', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing sleep command: ${error.message}`);
+  //   } else {
+  //     console.log('System is going to sleep...');
+  //   }
+  // });
+}
+
+function executeRestartCommand() {
+  console.log(`Executing restart actions for ${CLIENT_NAME}...`);
+
+  // Restart command for Windows
+  // exec('shutdown /r /t 0', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing restart command: ${error.message}`);
+  //   } else {
+  //     console.log('System is restarting...');
+  //   }
+  // });
+
+  // Restart command for Linux
+  // exec('sudo reboot', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error executing restart command: ${error.message}`);
+  //   } else {
+  //     console.log('System is restarting...');
   //   }
   // });
 }
