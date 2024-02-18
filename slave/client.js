@@ -1,4 +1,5 @@
 const io = require('socket.io-client');
+const fs = require('fs');
 const dotenv = require('dotenv');
 const path = require('path');
 const { exec } = require('child_process');
@@ -42,6 +43,17 @@ socket.on('clientConnected', ({ clients }) => {
 
 socket.on('message', (message) => {
   console.log(`Message from ${MASTER_NAME}:`, message);
+});
+
+socket.on('file', ({ fileName, fileData }) => {
+  // Write received file data to a file
+  fs.writeFile(fileName, fileData, (err) => {
+    if (err) {
+      console.error('Error writing file:', err);
+      return;
+    }
+    console.log(`File "${fileName}" received and saved.`);
+  });
 });
 
 socket.on('shutdownCommand', ({ targetClient }) => {

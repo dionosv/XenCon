@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -8,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-const rootDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(__dirname, '..');  
 dotenv.config({ path: path.join(rootDir, '.env') });
 
 const PORT = 8888;
@@ -20,6 +21,7 @@ const connectedClients = [];
 app.get('/', (req, res) => {
   res.send(`${MASTER_NAME} is running!`);
 });
+
 
 io.on('connection', (socket) => {
   const clientName = socket.handshake.headers['x-client-name'];
@@ -40,6 +42,18 @@ io.on('connection', (socket) => {
   io.emit('clientConnected', { clients: connectedClients });
 
   socket.emit('message', `Welcome, ${clientName}!`);
+
+   // Send file to the client
+   const filePath = path.join(__dirname, 'example.txt');
+   fs.readFile(filePath, (err, data) => {
+     if (err) {
+       console.error('Error reading file:', err);
+       return;
+     }
+ 
+     // Send the file content to the client
+     socket.emit('file', { fileName: 'example.txt', fileData: data });
+   });
 
   // Give a shutdown command to the specific PC
   // socket.emit('shutdownCommand', { targetClient: 'XENHACKPC1' });
